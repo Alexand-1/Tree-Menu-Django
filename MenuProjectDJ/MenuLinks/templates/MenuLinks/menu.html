@@ -1,0 +1,16 @@
+<ul>
+    {% for item in menu %}
+        <li class="menu-item">
+            <a href="{{ item.url }}">{{ item.name }}</a>
+            {% if item.has_children %}
+                <div class="submenu">
+                    {% for child in all_menu_items|dictsort:"order" %}
+                        {% if child.parent == item %}
+                            <a href="{{ child.url }}">{{ child.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

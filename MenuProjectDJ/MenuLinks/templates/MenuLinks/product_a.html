@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .menu-container {
+        background-color: #eee;
+        padding: 10px;
+    }
+
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .menu-item {
+        cursor: pointer;
+        padding: 10px;
+        background-color: #ccc;
+        border: 1px solid #999;
+        margin: 5px;
+    }
+
+    .menu-item:hover {
+        background-color: #ddd;
+    }
+
+    .submenu {
+        display: none;
+    }
+
+    .submenu-item {
+        cursor: pointer;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        margin: 5px;
+    }
+
+    .submenu-item:hover {
+        background-color: #eee;
+    }
+</style>
+</head>
+<body>
+    <header>
+        <h1>Продукт А</h1>
+    </header>
+
+    <div class="menu-container">
+        <nav>
+            <ul>
+                {% for item in main_menu %}
+                    <li class="menu-item">
+                        <a href="{{ item.url }}">{{ item.name }}</a>
+                        {% if item.children.all %}
+                            <ul class="submenu">
+                                {% for child in item.children.all %}
+                                    <li class="submenu-item">
+                                        <a href="{{ child.url }}">{{ child.name }}</a>
+                                        {% if child.children.all %}
+                                            <ul class="submenu">
+                                                {% for subchild in child.children.all %}
+                                                    <li class="submenu-item">
+                                                        <a href="{{ subchild.url }}">{{ subchild.name }}</a>
+                                                        {% if subchild.children.all %}
+                                                            <ul class="submenu">
+                                                                {% for subsubchild in subchild.children.all %}
+                                                                    <li class="submenu-item">
+                                                                        <a href="{{ subsubchild.url }}">{{ subsubchild.name }}</a>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        {% endif %}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Содержимое главной страницы -->
+    <main>
+        <p>Наш первый продукт разработанный специально для пепси колы</p>
+    </main>
+
+  <script>
+    const menuItems = document.querySelectorAll('.menu-item');
+
+    menuItems.forEach(item => {
+        item.addEventListener('mouseover', () => {
+            const submenu = item.querySelector('.submenu');
+            if (submenu) {
+                submenu.style.display = 'block';
+            }
+        });
+
+        item.addEventListener('mouseout', () => {
+            const submenu = item.querySelector('.submenu');
+            if (submenu) {
+                submenu.style.display = 'none';
+            }
+        });
+
+        item.addEventListener('click', (event) => {
+            const submenu = item.querySelector('.submenu');
+            if (submenu) {
+                if (submenu.style.display === 'block') {
+                    submenu.style.display = 'none';
+                } else {
+                    submenu.style.display = 'block';
+                }
+            } else {
+                // Если подменю отсутствует, перейдите по ссылке.
+                window.location.href = item.querySelector('a').getAttribute('href');
+            }
+        });
+
+        const subItems = item.querySelectorAll('.submenu-item');
+        subItems.forEach(subItem => {
+            subItem.addEventListener('mouseover', () => {
+                const subsubmenu = subItem.querySelector('.submenu');
+                if (subsubmenu) {
+                    subsubmenu.style.display = 'block';
+                }
+            });
+
+            subItem.addEventListener('mouseout', () => {
+                const subsubmenu = subItem.querySelector('.submenu');
+                if (subsubmenu) {
+                    subsubmenu.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
